@@ -20,8 +20,9 @@ function App() {
     ])
 
     const deleteAllTasks = () => {
-        filteredTasks = []
-        setTasks(filteredTasks)
+        let deletedTasks = tasks
+        deletedTasks = []
+        setTasks(deletedTasks)
     }
     
 
@@ -30,23 +31,10 @@ function App() {
         setTasks(deletedTasks)
     }
 
-    const [filter,setFilter] = useState<FiltersValueType>('all');
-    let filteredTasks = tasks;
-    if (filter === 'completed') {
-        filteredTasks = tasks.filter(t=>t.isDone === true)
-    } else if (filter === "active") {
-        filteredTasks = tasks.filter(t=>t.isDone === false)
-    } else if (filter === 'firstThree') {
-        filteredTasks = tasks.filter(t=>t.id === 1 || t.id === 2 || t.id === 3)
-    }
-    
-
-    const changeFilter = (value:FiltersValueType) => {
-        setFilter(value)
-    }
+   
     return (
         <div className="App">
-            <TodoList title={"What is your todo list?"} tasks={filteredTasks} removeTask={removeTask} changeFilter={changeFilter} deleteAllTasks={deleteAllTasks}/>
+            <TodoList title={"What is your todo list?"} tasks={tasks} removeTask={removeTask}  deleteAllTasks={deleteAllTasks}/>
         </div>
     );
 }
