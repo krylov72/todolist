@@ -1,52 +1,62 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { TodoList } from './Todolist';
 import './App.css';
-import {Todolist} from "./Todolist";
 
-export type TaskType = {
-	id: number
-	title: string
-	isDone: boolean
+
+export type TasksType = {
+    id: number,
+    title: string,
+    isDone: boolean
 }
 
-export type FilterValuesType = 'all' | 'completed' | 'active';
+export type FiltersValueType = 'all' | 'active' | 'completed' | 'firstThree'
 
 function App() {
-	
-	let [tasks,setTasks] = useState<Array<TaskType>>([
-		{ id: 1, title: 'HTML&CSS', isDone: true },
-		{ id: 2, title: 'JS', isDone: true },
-		{ id: 3, title: 'ReactJS', isDone: false },
-		{ id: 4, title: 'Redux', isDone: false },
-		{ id: 5, title: 'Typescript', isDone: false },
-		{ id: 6, title: 'RTK query', isDone: false },
-	])
+    const [tasks,setTasks] = useState<TasksType[]>([
+        {id: 1, title: 'Task 1', isDone: false},
+        {id: 2, title: 'Task 2', isDone: true},
+        {id: 3, title: 'Task 3', isDone: true},
+        {id: 4, title: 'Task 4', isDone: true},
+    ])
 
-	let [filter,setFilter] = useState<FilterValuesType>('all');
+    const deleteAllTasks = () => {
+        filteredTasks = []
+        setTasks(filteredTasks)
+    }
+    
 
-	function deleteTask (id: number) {
-		let filteredTasks = tasks.filter(t =>  t.id !== id)
-		setTasks(filteredTasks)
-	}
+    const removeTask = (taskId:number) => {
+        let deletedTasks = tasks.filter(t=>t.id !== taskId)
+        setTasks(deletedTasks)
+    }
 
-	function changeFilter (value:FilterValuesType) {
-		setFilter(value)
-	}
+    const [filter,setFilter] = useState<FiltersValueType>('all');
+    let filteredTasks = tasks;
+    if (filter === 'completed') {
+        filteredTasks = tasks.filter(t=>t.isDone === true)
+    } else if (filter === "active") {
+        filteredTasks = tasks.filter(t=>t.isDone === false)
+    } else if (filter === 'firstThree') {
+        filteredTasks = tasks.filter(t=>t.id === 1 || t.id === 2 || t.id === 3)
+    }
+    
 
-
-	let tasksForTodoList = tasks;
-	if (filter === 'completed') {
-		tasksForTodoList = tasks.filter(t=>t.isDone===true)
-	}
-	if (filter === 'active') {
-		tasksForTodoList = tasks.filter(t=>t.isDone===false)
-	} 
-
-	return (
-		<div className="App">
-			<Todolist title="What to learn" tasks={tasksForTodoList} removeTask={deleteTask} changeFilter={changeFilter} />
-			{/* <Todolist title="Songs" tasks={tasks2}/> */}
-		</div>
-	);
+    const changeFilter = (value:FiltersValueType) => {
+        setFilter(value)
+    }
+    return (
+        <div className="App">
+            <TodoList title={"What is your todo list?"} tasks={filteredTasks} removeTask={removeTask} changeFilter={changeFilter} deleteAllTasks={deleteAllTasks}/>
+        </div>
+    );
 }
 
 export default App;
+
+
+//Hi guys!
+//1. Let's create a 'DELETE ALL TASKS' button, and place it above the filter buttons
+//Clicking the button removes all tasks
+//2. Let's create a fourth filter button-if you click it, the first three tasks will be displayed
+//3. Relocate everything associated with  filters to the Todolist.tsx component. Make it work
+//
