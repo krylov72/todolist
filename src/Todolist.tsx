@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {FiltersValueType, TasksType} from "./App";
+import { Button } from './components/Button';
 
 type TodoListPropsType = {
-    id?: number,
+    id?: string,
     title: string,
     tasks: TasksType[]
-    removeTask:(taskId:number)=> void
+    removeTask:(taskId:string)=> void
     deleteAllTasks:() => void
+    addTask:(title:string) => void
 } 
 
 export const TodoList = ({
@@ -14,7 +16,8 @@ export const TodoList = ({
                              title,
                              tasks,
                              removeTask,
-                             deleteAllTasks
+                             deleteAllTasks,
+                             addTask
                          }: TodoListPropsType) => {
 
     const [filter,setFilter] = useState<FiltersValueType>('all');
@@ -24,9 +27,15 @@ export const TodoList = ({
     } else if (filter === "active") {
         filteredTasks = tasks.filter(t=>t.isDone === false)
     } else if (filter === 'firstThree') {
-        filteredTasks = tasks.filter(t=>t.id === 1 || t.id === 2 || t.id === 3)
+        filteredTasks = tasks.slice(0,3)
+    }
+
+    const addTaskHandler = () => {
+        addTask(taskTitle)
+          setTaskTitle('')
     }
     
+    const [taskTitle,setTaskTitle] = useState('')
 
     const changeFilter = (value:FiltersValueType) => {
         setFilter(value)
@@ -35,8 +44,10 @@ export const TodoList = ({
         <div>
             <h3>{title}</h3>
             <div>
-                <input/>
-                <button>+</button>
+                <input value={taskTitle} onChange={(event)=>{setTaskTitle(event.currentTarget.value)}}/>
+                <Button
+          title={'+'}
+          onClick={addTaskHandler}/>
             </div>
             {tasks.length === 0 ?
                 (<p>No tasks</p>) :
