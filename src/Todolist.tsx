@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent,useState } from 'react';
 import {FiltersValueType, TasksType} from "./App";
 import { Button } from './components/Button';
 
@@ -37,6 +37,16 @@ export const TodoList = ({
     
     const [taskTitle,setTaskTitle] = useState('')
 
+    const onChangeTaskTitleHandler = (e:ChangeEvent<HTMLInputElement>) => {
+        setTaskTitle(e.currentTarget.value)
+    }
+
+    const AddTaskOnKey = (e:KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            addTaskHandler()
+        }
+    }
+
     const changeFilter = (value:FiltersValueType) => {
         setFilter(value)
     }
@@ -44,7 +54,7 @@ export const TodoList = ({
         <div>
             <h3>{title}</h3>
             <div>
-                <input value={taskTitle} onChange={(event)=>{setTaskTitle(event.currentTarget.value)}}/>
+                <input value={taskTitle} onChange={onChangeTaskTitleHandler} onKeyUp={AddTaskOnKey} />
                 <Button
           title={'+'}
           onClick={addTaskHandler}/>
@@ -52,13 +62,20 @@ export const TodoList = ({
             {tasks.length === 0 ?
                 (<p>No tasks</p>) :
                 (<ul>
-                    {filteredTasks.map((t) =>
-                        <li key={t.id}>
+                    {filteredTasks.map(t => {
+                        const removeTaskHandler = () => {
+                            removeTask(t.id)
+                        }
+                        return(
+                            <li key={t.id}>
                             <input type="checkbox" checked={t.isDone}/>
                             <span>{t.title}</span>
-                            <button onClick={() =>{removeTask(t.id)}}>x</button>
+                            <button onClick={removeTaskHandler}>x</button>
                         </li>
                     )}
+                        )
+                    }
+                       
                 </ul>)
             }
             <button onClick={() => {deleteAllTasks()}} style={{marginLeft:25, marginBottom:20}}>Remove All Tasks</button>
