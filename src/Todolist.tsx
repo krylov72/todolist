@@ -1,6 +1,7 @@
-import React, { ChangeEvent, KeyboardEvent,useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent,useRef,useState } from 'react';
 import {FiltersValueType, TasksType} from "./App";
 import { Button } from './components/Button';
+import {useAutoAnimate} from '@formkit/auto-animate/react'
 
 type TodoListPropsType = {
     id?: string,
@@ -36,32 +37,43 @@ export const TodoList = ({
     }
     
     const [taskTitle,setTaskTitle] = useState('')
+    
+    let onChangeRef = useRef<HTMLInputElement>(null)
 
     const onChangeTaskTitleHandler = (e:ChangeEvent<HTMLInputElement>) => {
         setTaskTitle(e.currentTarget.value)
     }
 
     const AddTaskOnKey = (e:KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
+        if (e.key === 'Enter' && filterInputHandler()) {
             addTaskHandler()
         }
     }
 
+    const filterInputHandler = () => {
+        return taskTitle.length !== 0 && taskTitle.length <10
+    }
+
     const changeFilter = (value:FiltersValueType) => {
         setFilter(value)
+
+        
     }
+    const [listRef] = useAutoAnimate<HTMLUListElement>()
     return (
         <div>
             <h3>{title}</h3>
             <div>
-                <input value={taskTitle} onChange={onChangeTaskTitleHandler} onKeyUp={AddTaskOnKey} />
+                <input value={taskTitle} ref={onChangeRef} onChange={onChangeTaskTitleHandler} onKeyUp={AddTaskOnKey} />
                 <Button
           title={'+'}
-          onClick={addTaskHandler}/>
+          onClick={addTaskHandler}
+          disabled={!filterInputHandler()}
+          />
             </div>
             {tasks.length === 0 ?
                 (<p>No tasks</p>) :
-                (<ul>
+                (<ul ref={listRef}>
                     {filteredTasks.map(t => {
                         const removeTaskHandler = () => {
                             removeTask(t.id)

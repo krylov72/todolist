@@ -8,6 +8,6 @@ type ButtonPropsType = {
 
 export const Button = ({title,onClick,disabled}:ButtonPropsType) => {
     return (
-        <button onClick={onClick}>{title}</button>
+        <button disabled={disabled} onClick={onClick}>{title}</button>
     );
 };
