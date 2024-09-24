@@ -64,8 +64,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
     status: TaskStatuses,
     todolistId: string
   ) {
-    const thunk = updateTaskTC(id, { status }, todolistId);
-    dispatch(thunk);
+    dispatch(updateTaskTC({taskId:id,domainModel:{status},todolistId}));
   },
   []);
 
@@ -74,8 +73,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
     newTitle: string,
     todolistId: string
   ) {
-    const thunk = updateTaskTC(id, { title: newTitle }, todolistId);
-    dispatch(thunk);
+    dispatch(updateTaskTC({taskId:id,domainModel:{title:newTitle},todolistId}));
   },
   []);
 
