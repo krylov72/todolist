@@ -12,7 +12,7 @@ import {
   handleServerNetworkError,
 } from "../../utils/error-utils";
 import { setStatus } from "../../app/app-reducer";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { addTodolist, removeTodolist, setTodolists } from "./todolists-reducer";
 
 // types
@@ -94,7 +94,24 @@ export const tasksReducer = tasksSlice.reducer;
 export const { addTask, removeTask, setTasks, updateTask } = tasksSlice.actions;
 
 // thunks
-export const fetchTasksTC =
+
+export const fetchTaskTC = createAsyncThunk(
+  "tasks/fetch-task",
+  (todolistId: string, { dispatch }) => {
+    dispatch(setStatus("loading"));
+    try {
+      todolistsAPI.getTasks(todolistId).then((res) => {
+        const tasks = res.data.items;
+        dispatch(setTasks({ tasks, todolistId }));
+        dispatch(setStatus("succeeded"));
+      });
+    } catch (e) {
+      alert(e);
+    }
+  }
+);
+
+export const _fetchTasksTC =
   (todolistId: string): AppThunk =>
   (dispatch) => {
     dispatch(setStatus("loading"));
