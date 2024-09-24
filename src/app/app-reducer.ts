@@ -38,11 +38,14 @@ export const appSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchTaskTC.pending, (state, action) => {
+      .addCase(fetchTaskTC.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(fetchTaskTC.fulfilled, (state, action) => {
+      .addCase(fetchTaskTC.fulfilled, (state) => {
         state.status = "succeeded";
+      })
+      .addCase(fetchTaskTC.rejected, (state) => {
+        state.status = "failed";
       });
   },
 });
