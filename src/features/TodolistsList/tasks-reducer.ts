@@ -1,3 +1,4 @@
+
 import {
   TaskPriorities,
   TaskStatuses,
@@ -42,10 +43,6 @@ const tasksSlice = createSlice({
       const index = tasks.findIndex((t) => t.id === action.payload.taskId);
       tasks.splice(index, 1);
     },
-    addTask(state, action: PayloadAction<TaskType>) {
-      const tasks = state[action.payload.todoListId];
-      tasks.unshift(action.payload);
-    },
     updateTask(
       state,
       action: PayloadAction<{
@@ -82,13 +79,18 @@ const tasksSlice = createSlice({
       })
       .addCase(fetchTaskTC.rejected, (state, action) => {
         console.log(action.payload);
-      });
+      })
+      .addCase(addTaskTC.fulfilled,(state,action) => {
+        const tasks = state[action.payload.task.todoListId];
+        tasks.unshift(action.payload.task);
+      })
+      
   },
 });
 
 export const tasksReducer = tasksSlice.reducer;
 
-export const { addTask, removeTask, updateTask } = tasksSlice.actions;
+export const {removeTask, updateTask } = tasksSlice.actions;
 
 // thunks
 
@@ -120,26 +122,24 @@ export const removeTaskTC =
       dispatch(action);
     });
   };
-export const addTaskTC =
-  (title: string, todolistId: string): AppThunk =>
-  (dispatch) => {
-    dispatch(setStatus("loading"));
-    todolistsAPI
-      .createTask(todolistId, title)
-      .then((res) => {
+
+export const addTaskTC = createAppAsyncThunk<{task:TaskType},{todolistId:string,title:string}>("tasks/add-task", async ({todolistId,title},{dispatch,rejectWithValue}) => {
+  try{
+     const res = await todolistsAPI.createTask(todolistId, title)
         if (res.data.resultCode === 0) {
           const task = res.data.data.item;
-          const action = addTask(task);
-          dispatch(action);
-          dispatch(setStatus("succeeded"));
+          return {task}
         } else {
           handleServerAppError(res.data, dispatch);
+          return rejectWithValue(null)
         }
-      })
-      .catch((error) => {
-        handleServerNetworkError(error, dispatch);
-      });
-  };
+        
+  } catch(e:any) {
+    handleServerNetworkError(e,dispatch)
+    return rejectWithValue(null)
+  }
+})
+
 export const updateTaskTC =
   (
     taskId: string,
