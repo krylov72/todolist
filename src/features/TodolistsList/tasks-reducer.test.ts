@@ -1,7 +1,7 @@
 import { TaskPriorities, TaskStatuses } from "../../api/todolists-api";
 import {
   TasksStateType,
-  addTask,
+  addTaskTC,
   fetchTaskTC,
   removeTask,
   tasksReducer,
@@ -107,8 +107,12 @@ test("correct task should be deleted from correct array", () => {
 });
 test("correct task should be added to correct array", () => {
   //const action = addTaskAC("juce", "todolistId2");
-  const action = addTask({
-    todoListId: "todolistId2",
+
+  const action:TestThunkAction<typeof addTaskTC.fulfilled> = {
+    type:addTaskTC.fulfilled.type,
+    payload: {
+      task:{
+        todoListId: "todolistId2",
     title: "juce",
     status: TaskStatuses.New,
     addedDate: "",
@@ -118,7 +122,10 @@ test("correct task should be added to correct array", () => {
     priority: 0,
     startDate: "",
     id: "id exists",
-  });
+      }
+    }
+  }
+  
 
   const endState = tasksReducer(startState, action);
 
