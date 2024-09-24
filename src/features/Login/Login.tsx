@@ -13,8 +13,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 import { AppRootStateType } from "../../app/store";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
 import { loginTC } from "./auth-reducer";
+import { useAppDispatch } from "common";
 
 export const Login = () => {
   const dispatch = useAppDispatch();

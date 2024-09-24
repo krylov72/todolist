@@ -10,10 +10,8 @@ import {
 } from "./tasks-reducer";
 import { TaskStatuses } from "../../api/todolists-api";
 import { Grid, Paper } from "@mui/material";
-import { AddItemForm } from "../../components/AddItemForm/AddItemForm";
 import { Todolist } from "./Todolist/Todolist";
 import { Navigate } from "react-router-dom";
-import { useAppDispatch } from "../../hooks/useAppDispatch";
 import {
   addTodolistTC,
   changeTodolistFilter,
@@ -23,6 +21,7 @@ import {
   removeTodolistTC,
   TodolistDomainType,
 } from "./todolists-reducer";
+import { AddItemForm, useAppDispatch } from "common";
 
 type PropsType = {
   demo?: boolean;

@@ -5,7 +5,7 @@ import { AppThunk } from "../../app/store";
 import {
   handleServerAppError,
   handleServerNetworkError,
-} from "../../utils/error-utils";
+} from "../../common/utils";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type AuthInitialState = {
