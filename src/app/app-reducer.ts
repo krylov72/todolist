@@ -3,6 +3,7 @@ import { authAPI } from "../api/todolists-api";
 import { setIsLoggedIn } from "../features/Login/auth-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "./store";
+import { fetchTaskTC } from "../features/TodolistsList/tasks-reducer";
 
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 export type InitialStateType = {
@@ -34,6 +35,15 @@ export const appSlice = createSlice({
     setIsInitialized(state, action: PayloadAction<boolean>) {
       state.isInitialized = action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchTaskTC.pending, (state, action) => {
+        state.status = "loading";
+      })
+      .addCase(fetchTaskTC.fulfilled, (state, action) => {
+        state.status = "succeeded";
+      });
   },
 });
 
