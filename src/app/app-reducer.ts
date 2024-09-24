@@ -3,7 +3,7 @@ import { authAPI } from "../api/todolists-api";
 import { setIsLoggedIn } from "../features/Login/auth-reducer";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk } from "./store";
-import { fetchTaskTC } from "../features/TodolistsList/tasks-reducer";
+import { addTaskTC, fetchTaskTC } from "../features/TodolistsList/tasks-reducer";
 
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed";
 export type InitialStateType = {
@@ -46,7 +46,16 @@ export const appSlice = createSlice({
       })
       .addCase(fetchTaskTC.rejected, (state) => {
         state.status = "failed";
-      });
+      })
+      .addCase(addTaskTC.rejected, (state) => {
+        state.status = "failed";
+      })
+      .addCase(addTaskTC.fulfilled, (state) => {
+        state.status = "succeeded";
+      })
+      .addCase(addTaskTC.pending,(state,action) => {
+        state.status = 'loading';
+      })
   },
 });
 
