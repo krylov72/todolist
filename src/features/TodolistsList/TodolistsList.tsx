@@ -55,7 +55,7 @@ export const TodolistsList: React.FC<PropsType> = ({ demo = false }) => {
   }, []);
 
   const addTask = useCallback(function (title: string, todolistId: string) {
-    const thunk = addTaskTC(title, todolistId);
+    const thunk = addTaskTC({title:title,todolistId:todolistId});
     dispatch(thunk);
   }, []);
 
